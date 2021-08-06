@@ -1,5 +1,8 @@
 <?php
 
+use app\models\City;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -10,9 +13,18 @@ use yii\widgets\ActiveForm;
 
 <div class="review-form">
 
-    <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'city_id')->textInput() ?>
+    <?php
+    $data = ArrayHelper::map(City::find()->all(), 'id', 'name');
+    $form = ActiveForm::begin();
+    ?>
+    <?= $form->field($model, 'city_id')->widget(Select2::className(),
+        ['data' => $data,
+            'language' => 'ru',
+            'options' => ['placeholder' => 'Выберите город ...'],
+            'pluginOptions' => [
+                'allowClear' => true,
+                'multiple' => true],
+        ]) ?>
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 

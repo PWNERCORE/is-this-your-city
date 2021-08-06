@@ -86,7 +86,12 @@ class ReviewController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->city_id)
+            {
+                $model->city_id = implode(',', $model->city_id);
+            }
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -94,7 +99,6 @@ class ReviewController extends Controller
             'model' => $model,
         ]);
     }
-
     /**
      * Deletes an existing Review model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

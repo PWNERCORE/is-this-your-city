@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "review".
  *
  * @property int $id
- * @property int|null $city_id
+ * @property string|null $city_id
  * @property string|null $title
  * @property string|null $text
  * @property int|null $rating
@@ -16,8 +16,6 @@ use Yii;
  * @property int|null $author_id
  * @property int|null $creation_date
  *
- * @property User $author
- * @property City $city
  */
 class Review extends \yii\db\ActiveRecord
 {
@@ -35,11 +33,10 @@ class Review extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['city_id', 'rating', 'author_id', 'creation_date'], 'integer'],
+            [['rating', 'author_id', 'creation_date'], 'integer'],
             [['text'], 'string'],
             [['title', 'img'], 'string', 'max' => 255],
-            [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['author_id' => 'id']],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
+            [['city_id'],'safe']
         ];
     }
 
@@ -65,18 +62,9 @@ class Review extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getAuthor()
-    {
-        return $this->hasOne(User::className(), ['id' => 'author_id']);
-    }
-
     /**
      * Gets query for [[City]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCity()
-    {
-        return $this->hasOne(City::className(), ['id' => 'city_id']);
-    }
 }

@@ -6,6 +6,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 /* @var $model app\models\City */
 /* @var $this \yii\web\View */
+
 class Catcher extends City
 {
     public static function handler()
@@ -24,7 +25,8 @@ class Catcher extends City
         {
 
             ?>
-       <?= Html::beginForm(['site/catcher'], 'post'); ?>
+    <?= Html::beginForm(['site/catcher'], 'post'); ?>
+    <?= Html::label('Выберите город'); ?>
     <?= Html::dropDownList('city', 'name' , ArrayHelper::map(City::find()->all(), 'id', 'name'), ['prompt' => 'Выберите город']); ?>
     <?= Html::submitInput('Выбрать' , ['class' => 'btn btn-danger', 'name' => 'choose']); ?>
     <?= Html::endForm(); ?><?php
@@ -37,6 +39,9 @@ class Catcher extends City
             $session = Yii::$app->session;
             $session->open();
             $session->set('city', $city['name']);
+        }
+        else {
+            Yii::$app->response->redirect('index');
         }
 
     }
