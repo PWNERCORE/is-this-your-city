@@ -17,7 +17,8 @@ $config = [
             'cookieValidationKey' => 'tBvlXv3IrTJHd8SM9VY-m32PNXM0KsU_',
         ],
         'session' => [
-            'timeout'=> 7200
+            'class' => 'yii\web\Session',
+            'cookieParams' => ['lifetime' => 7200]
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
