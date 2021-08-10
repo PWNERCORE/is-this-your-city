@@ -14,7 +14,7 @@ class m210731_144824_create_city_table extends Migration
     {
         $this->createTable('{{%city}}', [
             'id' => $this->primaryKey(),
-            'name' => $this->string(),
+            'name' => $this->string()->unique(),
             'creation_date' => $this->integer()
         ]);
     }

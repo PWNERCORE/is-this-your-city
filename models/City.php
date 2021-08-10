@@ -71,7 +71,13 @@ class City extends \yii\db\ActiveRecord
         $secret = "ef2b8c507125f23231f71dfca6f42bfcef0e40a8";
         $dadata = new DadataClient($token, $secret);
         $result = $dadata->suggest("address", $input);
-        $echo = $result['0'];
-        return $echo['value'];
+        if (is_integer($input)) {
+            return $input;
+        }
+        else {
+            $echo = $result['0'];
+            $echo = $echo['data'];
+            return $echo['city'];
+        }
     }
 }

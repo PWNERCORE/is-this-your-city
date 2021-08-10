@@ -37,4 +37,8 @@ if (!$session['city'] and !Yii::$app->request->post('choose'))
 else  {
     print_r($session['city']);
 }
+echo '<br>';
+echo '<pre>';
+var_dump(City::inputCity('казан'));
+echo '</pre>';
 ?>

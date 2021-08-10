@@ -4,6 +4,7 @@ use app\models\City;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\web\JsExpression;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
@@ -17,14 +18,14 @@ use yii\widgets\ActiveForm;
     $data = ArrayHelper::map(City::find()->all(), 'id', 'name');
     $form = ActiveForm::begin();
     ?>
-    <?= $form->field($model, 'city_id')->widget(Select2::className(),
-        ['data' => $data,
-            'language' => 'ru',
-            'options' => ['placeholder' => 'Выберите город ...'],
-            'pluginOptions' => [
-                'allowClear' => true,
-                'multiple' => true],
-        ]) ?>
+    <?= $form->field($model, 'city_id')->widget(Select2::classname(), [
+        'data' => $data,
+        'options' => ['placeholder' => 'Выберите город...', 'multiple' => true],
+        'pluginOptions' => [
+            'tags' => true,
+            'maximumInputLength' => 10
+        ],
+    ]); ?>
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 

@@ -2,12 +2,16 @@
 
 namespace app\controllers;
 
+use app\models\City;
+use ArrayObject;
 use Yii;
 use app\models\Review;
 use app\models\ReviewSearch;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use function GuzzleHttp\Promise\all;
 
 /**
  * ReviewController implements the CRUD actions for Review model.
@@ -86,18 +90,42 @@ class ReviewController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post())) {
-            if ($model->city_id)
-            {
+        if ($model->load(Yii::$app->request->post()))
+        {
+            if ($model->city_id) {
+                $temp = [];
                 $model->city_id = implode(',', $model->city_id);
+                $items = explode(',', $model->city_id);
+                foreach ($items as $item) {
+                    $inputCity = City::inputCity($item);
+                    if (City::find()->where(['id' => $item])->exists()) {
+                        array_push($temp, $item);
+                    }
+                    else {
+                        if (is_integer($item)) {
+                            return null;
+                        }
+                        else {
+                            if (City::find()->where(['name' => $inputCity])->exists()) {
+                                $tempCity = City::find()->where(['name' => $inputCity])->one();
+                                array_push($temp, $tempCity->id);
+                            }
+                            else {
+                                Yii::$app->db->createCommand('INSERT INTO city (name) VALUES (:name)')
+                                    ->bindValue(':name', $inputCity)
+                                    ->execute();
+                                $tempCity = City::find()->where(['name' => $inputCity])->one();
+                                array_push($temp, $tempCity->id);
+                            }
+                        }
+                    }
+                }
+                $model->city_id = implode(',', array_unique($temp));
+                }
+                $model->save();
+                return $this->redirect(['view', 'id' => $model->id]);
             }
-            $model->save();
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        return $this->render('update', ['model' => $model]);
     }
     /**
      * Deletes an existing Review model.
