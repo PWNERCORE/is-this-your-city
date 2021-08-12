@@ -31,6 +31,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'title',
             'text:ntext',
             'rating',
+            [
+                'format' => 'html',
+                'label' => 'image',
+                'value' => function ($data) {
+                return Html::img($data->getImage(), ['width' => 200]);
+                }
+            ],
             //'img',
             //'author_id',
             //'creation_date',

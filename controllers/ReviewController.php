@@ -163,8 +163,7 @@ class ReviewController extends Controller
         if (Yii::$app->request->post())
         {
             $image = UploadedFile::getInstance($model, 'img');
-            $model->uploadFile($image);
-            $model->saveImage($model->uploadFile($image));
+            $model->saveImage($model->uploadFile($image, $model->img));
             return $this->redirect(['view', 'id' => $model->id]);
         }
         return $this->render('image', ['model' => $model]);

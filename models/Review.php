@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\console\Exception;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\web\UploadedFile;
@@ -40,7 +41,9 @@ class Review extends \yii\db\ActiveRecord
             [['author_id', 'creation_date'], 'integer'],
             [['text'], 'string'],
             [['rating'], 'in', 'range' => [1, 2, 3, 4, 5]],
-            [['title', 'img'], 'string', 'max' => 255],
+            [['title'], 'string', 'max' => 255],
+            [['img'], 'required'],
+            [['img'], 'file', 'extensions' => 'jpg,png'],
             [['city_id'],'safe']
         ];
     }
@@ -76,16 +79,28 @@ class Review extends \yii\db\ActiveRecord
         ];
     }
 
-    public function uploadFile(UploadedFile $file)
+    public function uploadFile(UploadedFile $file, $currentFile)
     {
         $filename = uniqid() . $file->name;
-        $file->saveAs(Yii::getAlias('@web') . 'uploads/' . $filename);
-        return $filename;
+            @unlink(Yii::getAlias('@web') . 'uploads/' . $currentFile);
+            $file->saveAs(Yii::getAlias('@web') . 'uploads/' . $filename);
+            return $filename;
+
     }
 
     public function saveImage ($image) {
         $this->img = $image;
         return $this->save(false);
+    }
+
+    public function beforeDelete()
+    {
+        @unlink(Yii::getAlias('@web') . 'uploads/' . $this->img);
+        return parent::beforeDelete();
+    }
+
+    public function getImage () {
+        return ($this->img) ? '/uploads/' . $this->img : '/no-image.png';
     }
 
     /**
