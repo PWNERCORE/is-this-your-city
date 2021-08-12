@@ -4,6 +4,9 @@ namespace app\models;
 
 use Dadata\DadataClient;
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "city".
@@ -35,7 +38,21 @@ class City extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'attributes' =>
+                    [
+                        ActiveRecord::EVENT_BEFORE_INSERT => ['creation_date'],
+                    ],
+                'value' => new Expression('UNIX_TIMESTAMP(NOW())'),
+            ],
+        ];
+    }
+
+        /**
      * {@inheritdoc}
      */
     public function attributeLabels()

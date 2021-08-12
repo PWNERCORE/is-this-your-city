@@ -3,6 +3,10 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "review".
@@ -33,10 +37,25 @@ class Review extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rating', 'author_id', 'creation_date'], 'integer'],
+            [['author_id', 'creation_date'], 'integer'],
             [['text'], 'string'],
+            [['rating'], 'in', 'range' => [1, 2, 3, 4, 5]],
             [['title', 'img'], 'string', 'max' => 255],
             [['city_id'],'safe']
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'attributes' =>
+                    [
+                        ActiveRecord::EVENT_BEFORE_INSERT => ['creation_date'],
+                    ],
+                'value' => new Expression('UNIX_TIMESTAMP(NOW())'),
+            ],
         ];
     }
 
@@ -55,6 +74,18 @@ class Review extends \yii\db\ActiveRecord
             'author_id' => 'Author ID',
             'creation_date' => 'Creation Date',
         ];
+    }
+
+    public function uploadFile(UploadedFile $file)
+    {
+        $filename = uniqid() . $file->name;
+        $file->saveAs(Yii::getAlias('@web') . 'uploads/' . $filename);
+        return $filename;
+    }
+
+    public function saveImage ($image) {
+        $this->img = $image;
+        return $this->save(false);
     }
 
     /**

@@ -57,7 +57,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     /**
      * Gets query for [[Reviews]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return yii\db\ActiveQuery
      */
     public function getReviews()
     {

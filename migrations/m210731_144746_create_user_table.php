@@ -16,7 +16,7 @@ class m210731_144746_create_user_table extends Migration
             'id' => $this->primaryKey(),
             'fio' => $this->string(),
             'email' => $this->string(),
-            'phone' => $this->integer(),
+            'phone' => $this->bigInteger(),
             'creation_date' => $this->integer(),
             'password' => $this->string()
         ]);

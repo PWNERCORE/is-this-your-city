@@ -1,13 +1,16 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $model app\models\City */
+/* @var $model app\models\Review */
 
 
+use app\models\City;
+use app\models\Review;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\bootstrap\Modal;
 use yii\widgets\ActiveForm;
-use app\models\City;
+use yii\widgets\DetailView;
 
 $this->title = 'My Yii Application';
 
@@ -35,10 +38,22 @@ if (!$session['city'] and !Yii::$app->request->post('choose'))
         Modal::end();
 }
 else  {
-    print_r($session['city']);
+    $city = City::findOne(['name' => $session['city']]);
+    $reviews = Review::find()->all();
+
+    foreach ($reviews as $review)
+    {
+        //kazan 15, yaroslavl 16
+       $city_id = explode(',', $review->city_id);
+        if (in_array($city['id'], $city_id))
+        {
+            echo $review->title;
+            echo '<hr>';
+        }
+        else
+            {
+
+        }
+    }
 }
-echo '<br>';
-echo '<pre>';
-var_dump(City::inputCity('казан'));
-echo '</pre>';
 ?>
