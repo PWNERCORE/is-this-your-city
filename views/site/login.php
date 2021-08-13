@@ -40,8 +40,21 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php ActiveForm::end(); ?>
 
-    <div class="col-lg-offset-1" style="color:#999;">
-        You may login with <strong>admin/admin</strong> or <strong>demo/demo</strong>.<br>
-        To modify the username/password, please check out the code <code>app\models\User::$users</code>.
-    </div>
+    <?php
+
+    if (Yii::$app->session->hasFlash('status')) {
+        $flash = Yii::$app->session->getFlash('status');
+       echo "<div class='alert alert-danger' role='alert'>
+            $flash
+            </div>";
+
+    }
+    elseif (Yii::$app->session->hasFlash('confirm')) {
+        $flash = Yii::$app->session->getFlash('confirm');
+        echo "<div class='alert alert-success' role='alert'>
+            $flash
+            </div>";
+    }
+
+    ?>
 </div>

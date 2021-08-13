@@ -14,12 +14,18 @@ use yii\web\IdentityInterface;
  * @property int|null $phone
  * @property int|null $creation_date
  * @property string|null $password
+ * @property string|null $token
+ * @property int|null $status
  *
  * @property-read void $authKey
  * @property Review[] $reviews
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
+    /**
+     * @var mixed|string|null
+     */
+
     /**
      * {@inheritdoc}
      */
@@ -36,6 +42,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return [
             [['phone', 'creation_date'], 'integer'],
             [['fio', 'email', 'password'], 'string', 'max' => 255],
+            [['token', 'status'], 'safe'],
             ['email', 'unique', 'targetClass' => User::className(),  'message' => 'Этот email уже занят'],
         ];
     }
@@ -52,6 +59,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             'phone' => 'Phone',
             'creation_date' => 'Creation Date',
             'password' => 'Password',
+            'token' => 'Token'
         ];
     }
 
@@ -60,9 +68,20 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      *
      * @return yii\db\ActiveQuery
      */
+
     public function getReviews()
     {
         return $this->hasMany(Review::className(), ['author_id' => 'id']);
+    }
+
+    public static function checkStatus() {
+        $loginForm = Yii::$app->request->post('LoginForm');
+        $user = User::findOne(['email' => $loginForm['email']]);
+        if ($user->status == 1) {
+            return true;
+        }
+            Yii::$app->session->setFlash('status', 'Вы не подтвердили email!');
+            return false;
     }
 
     public static function findIdentity($id)

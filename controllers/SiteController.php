@@ -6,6 +6,7 @@ use app\models\SignupForm;
 use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -88,6 +89,7 @@ class SiteController extends Controller
         ]);
     }
 
+
     /**
      * Logout action.
      *
@@ -100,17 +102,29 @@ class SiteController extends Controller
         }
         $model = new SignupForm();
 
-        if($model->load(\Yii::$app->request->post()) && $model->validate()){
+        if($model->load(Yii::$app->request->post()) && $model->validate()){
             $user = new User();
             $user->email = $model->email;
             $user->fio = $model->fio;
             $user->phone = $model->phone;
+            $user->token = Yii::$app->security->generateRandomString(30);
             $user->password = Yii::$app->security->generatePasswordHash($model->password);
+
             if($user->save()) {
-                return $this->goHome();
+            $confirmLink = Yii::$app->urlManager->createAbsoluteUrl(['site/confirm', 'token' => $user->token]);
+            Yii::$app->mailer->compose()
+                ->setFrom('yii2@mail.dev')
+                ->setTo($model->email)
+                ->setSubject('Confirm: ')
+                ->setSubject($confirmLink)
+                ->send();
             }
         }
         return $this->render('signup', ['model' => $model]);
+    }
+
+    public function actionConfirm () {
+        return $this->render('confirm');
     }
 
     public function actionLogout()

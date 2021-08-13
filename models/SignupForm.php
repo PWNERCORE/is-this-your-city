@@ -14,9 +14,9 @@ public $password_repeat;
 public function rules()
 {
     return [
-        [['email', 'fio', 'phone', 'password'], 'required', 'message' => 'Заполните поле'],
-        ['password_repeat', 'required'],
+        [['email', 'fio', 'phone', 'password', 'password_repeat'], 'required', 'message' => 'Заполните поле'],
         [['email'], 'email'],
+        ['email', 'unique', 'targetClass' => User::className(),  'message' => 'Этот email уже занят'],
         ['password_repeat', 'compare', 'compareAttribute'=>'password', 'message'=>"Пароли не совпадают" ],
     ];
 }

@@ -20,7 +20,7 @@ class m210806_130918_create_review_table extends Migration
                 'rating' => $this->integer(),
                 'img' => $this->string(),
                 'author_id' => $this->integer(),
-                'creation_date' => $this->integer()
+                'creation_date' => $this->integer(),
         ]);
     }
 

@@ -18,7 +18,9 @@ class m210731_144746_create_user_table extends Migration
             'email' => $this->string(),
             'phone' => $this->bigInteger(),
             'creation_date' => $this->integer(),
-            'password' => $this->string()
+            'password' => $this->string(),
+            'token' => $this->string(),
+            'status' => $this->smallInteger()->defaultValue('0')
         ]);
 
 
