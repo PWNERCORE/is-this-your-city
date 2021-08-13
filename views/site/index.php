@@ -56,6 +56,7 @@ else
                     {
                         echo '<h2>' . $review->title . '</h2>' . '<br>';
                         echo '<h4>' . $review->text . '</h4>' . '<br>';
+                        echo Html::img($review->img);
                         Modal::begin([
                             'header' => '<h2>Подробнее</h2>',
                             'toggleButton' => [
