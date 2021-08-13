@@ -6,6 +6,7 @@
 
 use app\models\City;
 use app\models\Review;
+use app\models\User;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\bootstrap\Modal;
@@ -24,7 +25,7 @@ if (!$session['city'] and !Yii::$app->request->post('choose'))
         'header' => '<h2>Это ваш город?</h2>',
         'toggleButton' => [
             'label' => 'Выбрать город',
-            'id' => 'modal',
+            'id' => 'city',
             'class' => 'btn btn-success',
             ],
         ]);
@@ -37,23 +38,38 @@ if (!$session['city'] and !Yii::$app->request->post('choose'))
 <?php
         Modal::end();
 }
-else  {
-    $city = City::findOne(['name' => $session['city']]);
-    $reviews = Review::find()->all();
-
-    foreach ($reviews as $review)
+else
     {
-        //kazan 15, yaroslavl 16
-       $city_id = explode(',', $review->city_id);
-        if (in_array($city['id'], $city_id))
+        $city = City::findOne(['name' => $session['city']]);
+        $reviews = Review::find()->all();
+        if (Yii::$app->user->isGuest)
         {
-            echo $review->title;
-            echo '<hr>';
+            echo 'Вы не авторизированны';
         }
         else
             {
-
-        }
+                foreach ($reviews as $review)
+                {
+                    $user = User::findOne(['id' => $review->author_id]);
+                    $city_id = explode(',', $review->city_id);
+                    if (in_array($city['id'], $city_id))
+                    {
+                        echo '<h2>' . $review->title . '</h2>' . '<br>';
+                        echo '<h4>' . $review->text . '</h4>' . '<br>';
+                        Modal::begin([
+                            'header' => '<h2>Подробнее</h2>',
+                            'toggleButton' => [
+                                'label' => $user->fio,
+                                'id' => 'review',
+                                'class' => 'btn btn-link',
+                            ],
+                        ]);
+                        echo $user->email . '<br>' . $user->phone . '<br>';
+                        echo Html::a('Все отзывы', ['review/index?ReviewSearch%5Bauthor_id%5D=' . $review->author_id]);
+                        Modal::end();
+                        echo '<hr>';
+                    }
+                }
     }
 }
 ?>

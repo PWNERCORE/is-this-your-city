@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             //'img',
-            //'author_id',
+            'author_id',
             //'creation_date',
 
             ['class' => 'yii\grid\ActionColumn'],

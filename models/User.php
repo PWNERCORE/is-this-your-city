@@ -36,6 +36,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return [
             [['phone', 'creation_date'], 'integer'],
             [['fio', 'email', 'password'], 'string', 'max' => 255],
+            ['email', 'unique', 'targetClass' => User::className(),  'message' => 'Этот email уже занят'],
         ];
     }
 
@@ -91,7 +92,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 
     public function validatePassword($password)
     {
-        return $this->password === $password;
+        return Yii::$app->security->validatePassword($password, $this->password);
     }
 
     public static function findByEmail($email)

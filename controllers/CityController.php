@@ -37,6 +37,7 @@ class CityController extends Controller
                     ],
                     [
                         'allow' => true,
+                        'actions' => ['view'],
                         'roles' => ['@'],
                     ],
                 ],
