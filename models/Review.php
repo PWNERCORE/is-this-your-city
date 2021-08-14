@@ -42,7 +42,6 @@ class Review extends \yii\db\ActiveRecord
             [['text'], 'string'],
             [['rating'], 'in', 'range' => [1, 2, 3, 4, 5]],
             [['title'], 'string', 'max' => 255],
-            [['img'], 'required'],
             [['img'], 'file', 'extensions' => 'jpg,png'],
             [['city_id'],'safe']
         ];

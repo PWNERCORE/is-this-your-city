@@ -51,9 +51,9 @@ else
             {
                 foreach ($reviews as $review)
                 {
-                    $user = User::findOne(['id' => $review->author_id]);
+                    $author = User::findOne(['id' => $review->author_id]);
                     $city_id = explode(',', $review->city_id);
-                    if (in_array($city['id'], $city_id))
+                    if (in_array($city['id'], $city_id) or empty($review->city_id))
                     {
                         echo '<p><h2>' . $review->title . '</h2></p>';
                         echo '<p><h4>' . $review->text . '</h4></p>';
@@ -62,12 +62,12 @@ else
                         Modal::begin([
                             'header' => '<h2>Подробнее</h2>',
                             'toggleButton' => [
-                                'label' => $user->fio,
+                                'label' => $author->fio,
                                 'id' => 'review',
                                 'class' => 'btn btn-link',
                             ],
                         ]);
-                        echo $user->email . '<br>' . $user->phone . '<br>';
+                        echo $author->email . '<br>' . $author->phone . '<br>';
                         echo Html::a('Все отзывы', ['review/index?ReviewSearch%5Bauthor_id%5D=' . $review->author_id]);
                         Modal::end();
                         echo '<hr>';
