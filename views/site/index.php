@@ -10,6 +10,7 @@ use app\models\User;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\bootstrap\Modal;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\widgets\DetailView;
 
@@ -54,9 +55,10 @@ else
                     $city_id = explode(',', $review->city_id);
                     if (in_array($city['id'], $city_id))
                     {
-                        echo '<h2>' . $review->title . '</h2>' . '<br>';
-                        echo '<h4>' . $review->text . '</h4>' . '<br>';
-                        echo Html::img($review->img);
+                        echo '<p><h2>' . $review->title . '</h2></p>';
+                        echo '<p><h4>' . $review->text . '</h4></p>';
+                        echo '<p>' . Html::img($review->getImage(), ['width' => 200]) . '</p>';
+
                         Modal::begin([
                             'header' => '<h2>Подробнее</h2>',
                             'toggleButton' => [
