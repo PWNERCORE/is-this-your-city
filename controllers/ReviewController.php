@@ -113,7 +113,8 @@ class ReviewController extends Controller
                 $model->city_id = implode(',', $model->city_id);
                 $items = explode(',', $model->city_id);
                 foreach ($items as $item) {
-                    $inputCity = City::inputCity($item);
+                    Yii::$app->geolocation->inputCity($item);
+                    $inputCity = Yii::$app->geolocation->inputCity($item);
                     if (City::find()->where(['id' => $item])->exists()) {
                         array_push($temp, $item);
                     }

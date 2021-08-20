@@ -30,7 +30,7 @@ if (!$session['city'] and !Yii::$app->request->post('choose'))
             'class' => 'btn btn-success',
             ],
         ]);
-        echo City::getCity();
+        echo Yii::$app->geolocation->getCity();
         ?>
     <?= Html::beginForm(['site/catcher'], 'post'); ?>
     <?= Html::submitInput('Да' , ['class' => 'btn btn-success', 'name' => 'submit']); ?>

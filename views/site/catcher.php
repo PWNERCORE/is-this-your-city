@@ -16,7 +16,7 @@ class Catcher extends City
         {
             $session = Yii::$app->session;
             $session->open();
-            $session->set('city', City::getCity());
+            $session->set('city', Yii::$app->geolocation->getCity());
             Yii::$app->response->redirect('index');
 
 
